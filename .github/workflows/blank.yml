@@ -38,7 +38,7 @@ jobs:
       - name: Set and Validate Deployment Variables
         id: vars
         env:
-          sha_workflow: ${{ github.event.workflow_run.head_commit.id }}
+          COMMIT_ID: ${{ github.event.workflow_run.head_commit.id }}
         run: |
           echo "Validating deployment variables..."
           # Force environment to development
@@ -46,12 +46,12 @@ jobs:
           echo "environment=${ENVIRONMENT}" >> "$GITHUB_OUTPUT"
           
           # Validate that the merge commit SHA exists and use it as the country config image tag.
-          if [ -z "${{ sha_workflow }}" ]; then
+          if [ -z "${{ COMMIT_ID }}" ]; then
             echo "Error: Merge commit SHA not found."
             exit 1
           fi
 
-          MERGE_SHA="${{ sha_workflow }}"
+          MERGE_SHA="${{ COMMIT_ID }}"
           # Extract the short commit id (first 7 characters)
           SHORT_SHA="${MERGE_SHA:0:7}"
           echo "countryconfig_image_tag=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
